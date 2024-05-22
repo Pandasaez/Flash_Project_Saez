@@ -17,7 +17,7 @@ def hello_world():
     return "<p>Hello Testing</p>"
 
 @app.route("/information", methods = ["GET"])
-def get_insformation():
+def get_information():
     cur = mysql.connection.cursor()
     query ="""
     select * from student
@@ -27,6 +27,16 @@ def get_insformation():
     cur.close()
     
     return make_response(jsonify(data), 200)
+@app.route("/information/<int:id", methods=["GET"])
+def get_student_by_ID(id):
+    cur = mysql.connection.cursor()
+    query ="""
+    SELECT * FROM information.student WHERE ID = {}
+    """.format(id)
+    cur.execute(query)
+    data = cur.fetchall()
+    cur.close()
+    
     
 
 if __name__ == "__main__":
