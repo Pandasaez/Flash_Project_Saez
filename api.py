@@ -28,13 +28,11 @@ def get_information():
     
     return make_response(jsonify(data), 200)
 
-@app.route("/information/student/<int:ID", methods=["GET"])
+@app.route("/information/student/<int:ID>", methods=["GET"])
 def get_student_by_id(ID):
     cur = mysql.connection.cursor()
-    query ="""
-    SELECT * FROM information.student where ID = {}
-    """.format(ID)
-    cur.execute(query)
+    query = "SELECT * FROM student WHERE ID = %s"
+    cur.execute(query, (ID,))
     data = cur.fetchall()
     cur.close()
     

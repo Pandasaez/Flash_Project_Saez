@@ -21,9 +21,9 @@ class MyAppTests(unittest.TestCase):
         
         
     def test_getstudent_by_ID(self):
-        response = self.app.get("/information/2022")
+        response = self.app.get("/information/student/1234")
         self.assertEqual(response.status_code, 200)
-        self.assertTrue("Jasper" in response.data.decode())
+        self.assertTrue("Jiro" in response.data.decode())
         
 if __name__ == "__main__":
     unittest.main()
