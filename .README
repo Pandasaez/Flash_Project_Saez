@@ -167,3 +167,79 @@ is an easy process create a new tab then select `DELETE` then then input the giv
 In the instruction we are asked to do a search function to search at the data base .so i came up with a name search function so you would type the name of the student you want to pull up so to do this..
 
 Open another tab and set it to `GET` then input the link for the database "http://127.0.0.1:5000" then add this "/search?name=the name you want to search for" so example `http://127.0.0.1:5000/search?name=Jasper` then on the tabs for putting the aethentication which will be the Headers tab go there and apply the same security inputs  `key` and `Value` . then hit send and it should show you the name of the data your trying to pull up 
+
+
+
+# Summary Code for POSTMAN
+
+>LOGIN
+
+POST: http://127.0.0.1:5000/login
+
+Body (Raw, JSON)
+```PYTHON
+{
+    "username": "Jasper",
+    "password": "Saez"
+}
+
+```
+
+>READ
+
+GET: http://127.0.0.1:5000/
+* Headers
+* key:Authorization
+* Value: Bearer
+
+
+>ADD
+
+POST:http://127.0.0.1:5000/insert
+* Headers
+* key:Authorization
+* Value: Bearer
+
+Body (Raw, JSON)
+```PYTHON
+{
+    "ID": 111111,
+    "name": "Jack Sparow",
+    "age": 47,
+    "college": "College of Pirates"
+}
+```
+
+
+>UPDATE
+
+PUT:http://127.0.0.1:5000/update/ID u want to change
+* Headers
+* key:Authorization
+* Value: Bearer
+
+Body (Raw, JSON)
+```PYTHON
+{
+    "ID": "696969",
+    "name": "Jaack Sparow",
+    "age": 50,
+    "college" : "College of Pirates"
+}
+```
+
+>DELETE
+
+DELETE:http://127.0.0.1:5000/delete/THE ID YOU WANT TO DELETE
+* Headers
+* key:Authorization
+* Value: Bearer
+
+
+> SEARCH
+
+GET:http://127.0.0.1:5000/search?name=
+* Headers
+* key:Authorization
+* Value: Bearer
+

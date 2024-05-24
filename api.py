@@ -22,7 +22,7 @@ jwt = JWTManager(app)
 # Initialize MySQL
 mysql = MySQL(app)
 
-# Dummy user data for authentication
+# For login user and login
 users = {
     'Jasper': 'Saez'
 }
