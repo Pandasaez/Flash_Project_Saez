@@ -93,6 +93,7 @@ def index():
 def update(id_data):
     try:
         data = request.get_json()
+        new_id = data.get('ID')
         name = data.get('name')
         age = data.get('age')
         college = data.get('college')
@@ -102,15 +103,16 @@ def update(id_data):
 
         cur = mysql.connection.cursor()
         cur.execute("""
-        UPDATE student SET `Student Name`=%s, `Age`=%s, `College`=%s
+        UPDATE student SET `ID`=%s, `Student Name`=%s, `Age`=%s, `College`=%s
         WHERE ID=%s
-        """, (name, age, college, id_data))
+        """, (new_id, name, age, college, id_data))
         mysql.connection.commit()
         cur.close()
 
         return jsonify({"message": "Data Updated Successfully"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
 
 # Delete a student (protected route)
 @app.route('/delete/<int:id_data>', methods=['DELETE'])

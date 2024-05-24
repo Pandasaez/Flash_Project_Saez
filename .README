@@ -1,0 +1,161 @@
+Hello Im jasper Saez BSIT 2nd year Student in the Subject of Integrative Programming & Technology
+
+In this project the goal is to create a CRUD (Create, Read, Update, and Delete) REST API for your chosen MySQL database
+(see video “choosing database.mp4”) similar to the Python Flask API programming video. The API will allow users to interact with the
+database and will act as an Interface to any client that understands JSON or XML. You will also set up tests to ensure the functionality
+of the API, and provide the option to format the API output as XML or JSON.
+
+Instructions of the Project:
+1. Setup your database: It will be assumed that you’ve installed a MySQL server with your chosen database in your system, make
+sure it contains enough (20 records and above) for testing.
+    - So we did create a data base which i will include in the git repository but in my case i used it on MySQL Workbench
+  
+2. Create a new GitHub repository for your project. Make sure to select the option to initialize the repository with a README file,
+write down the installation procedures of your project here once you’re done. Clone the repository to your local development
+environment.
+
+3. Create a virtual environment for your project, and ignore it in your. gitignore file and go into the virtual environment (see video
+series for context), do not include the environment when you upload your project in Github.
+
+4. Install libraries needed for this project (just like in the tutorial video(s))
+
+5. Develop your Flask REST API Web Application.
+
+### Grading Breakdown
+
+1. Github commit and push (containing multiple commits having different timestamp): 3 points
+Push your local Git repository to the remote repository on GitHub. search for git best practices, to have a basic idea how
+to organize your commits.
+
+2. CRUD(Create, Read, Update, Delete) operations (contains input validations, error handling): 8 points
+Return appropriate HTTP responses based on the success or failure of the operations, search for the appropriate header
+values when providing responses for API’s.
+
+3. CRUD Tests: (5 points)
+Write test cases to cover all the CRUD operations for the API endpoints. Ensure that the tests cover different scenarios
+and edge cases.
+
+4. Formatting options (4 points)
+Modify the API endpoints to check for a URI parameter (e.g., format) that specifies the desired output format (XML or
+JSON). If the parameter is not provided, JSON should be the default format. (see last video in the tutorial series for more
+information)
+
+5. Implement search functionality, allowing users to search for records based on specific criteria. (5 points)
+   
+6. Add security mechanisms to secure the API endpoints (search JWT or similar) (5 points)
+   
+7. Documentation (5 points). Update the README file in your GitHub repository to include project details, installation
+instructions, usage examples, API usage (see documentation of popular APIs for more info.) and any additional
+information that would help others understand and run your project.
+
+
+8. Video explainer: No points, but is required for this drill, submission without a video explainer means No Grade, features
+which are implemented in the code but without explanation in the video means No points. (You must be visible in the
+video. Explain your work as technical as possible)
+
+
+# HOW TO RUN THE PROGRAM
+
+Flask CRUD API with MySQL and JWT Authentication
+
+This is a Flask CRUD API project that interacts with a MySQL database to perform Create, Read, Update, and Delete operations on student records. JWT (JSON Web Tokens) authentication is implemented to secure the API endpoints.
+
+## Setup Instructions
+Install all the labiraries needed
+pip install Flask
+pip install-JWT-Extended
+pip install Flask-MySQLdb
+
+## Update the MySQL database configuration in api.py
+```py
+app = Flask(__name__)
+app.secret_key = "many random bytes"
+app.config['MYSQL_HOST'] = "localhost"
+app.config['MYSQL_USER'] = "root"
+app.config['MYSQL_PASSWORD'] = "Secret"
+app.config['MYSQL_DB'] = 'information'
+```
+
+Change the information if you must for your sql to connect 
+
+## Set the JWT secret key in app.py:
+
+## Run the Program
+**1.** Once the program api.py is runnning it will give you the link for the program which in this case lets use "127.0.0.1:5000"
+
+**2.** Open postman and create a new tab.. (ill assume you already know how postman works) set it to POST and input the site link which will be http://127.0.0.1:5000 ..then add /login like this "http://127.0.0.1:5000/login"
+
+**3.** after that head to the body and set it to "raw" and "JSON"
+
+**4.** Then incode this on the body 
+```python
+{
+    "username": "Jasper",
+    "password": "Saez"
+}
+```
+this will depend on the information you put in the api.py here
+```python
+# Login route to generate JWT token
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+```
+**5.** after that click send and it should give you the "access_token" which will be your access key to do the CRUD
+   
+# CRUD SET UP
+## **1.Reading the DATA**
+
+ Lets gets started With cRud The R in crud this means Read so we will read the data from sql using postman ... Create a new Tab and select GET then input the given link from the program for this example we will use this "http://127.0.0.1:5000" then just add this at the end "/" which should look like this "http://127.0.0.1:5000/" then after that head to headers in the tab area then on the `key` type "Authorization" then on the `value`  type in the "Bearer" then followed up by a space then your Access_Token .. It should look something like this 
+
+"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxNjUxNjA0MSwianRpIjoiOWU5MTVkZWItYzljYy00N2UxLWFiYzEtMWJmMjIwNTE5NzM3IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Ikphc3BlciIsIm5iZiI6MTcxNjUxNjA0MSwiY3NyZiI6ImY0MzBiZDA5LWVjZDctNDI4NS1iMTFkLTM0MzEyYzViMzFmMSIsImV4cCI6MTcxNjUxNjk0MX0.2nzQSIHrs95IP2gMo_9laGknThXrStZUjSIEufMhUBU" 
+
+along that lines and then click send and that sould show the data base from your sql the status should be 200 OK if not review your code for mistakes.
+
+## **2.Creating the DATA**
+
+Create another tab and select POST then input the same link of the program like "http://127.0.0.1:5000" then add "/insert" so it would be similar to this "http://127.0.0.1:5000/insert" then copy the same instruction for Reading the data on the Headers Tab copy the `value` and `key` on the Reading data then go to the body on the tab
+
+Select `raw` then select `JSON` then input this on the body
+```python
+{
+    "ID": 111111,
+    "name": "Jack Sparow",
+    "age": 47,
+    "college": "College of Pirates"
+}
+```
+Input the data you want to add on the data base because again this is Creating/ Adding to the database in SQL then hit send ... then it should send you this once its successful and with `201 CREATED` ```python "message": "Data Inserted Successfully" ```
+
+to check if your new data is imported check the tab of your Read so you acn see if the new dta has been added
+
+
+## **3.Update the DATA**
+
+Here is the process for the Update do the same for the headers tab copy the same instruction for Reading the data on the Headers Tab copy the `value` and `key` on the Reading data then go to the body on the tab and set it to `PUT` then input the same link of the program like "http://127.0.0.1:5000" then add "/update/" so it would be similar to this "http://127.0.0.1:5000/update/"then search for the ID of the user you want to update you can do so in the sql or at the Read tab you made for this example lets say the ID of the student is 1234  so its should look like this "http://127.0.0.1:5000/update/1234" 
+
+then go to the body on the tab
+
+Select `raw` then select `JSON` then input this on the body
+
+```python
+{
+    "ID": "696969",
+    "name": "Jaack Sparow",
+    "age": 50,
+    "college" : "College of Pirates"
+}
+```
+
+input what you want to change the new information to be for that student you can change the ID name age and college based on the data.
+
+then click send and it should send you this prompt when its done `"message": "Data Updated Successfully"`
+
+with 200OK
+
+
+## **4. Delete the DATA**
+
+is an easy process create a new tab then select `DELETE` then then input the given link from the program for this example we will use this "http://127.0.0.1:5000" then just input the data like this to delete a user "/delete/1234?authe" just change the number depending of the ID of that student you want to remove/delete... it should look like this completed "http://127.0.0.1:5000/delete/3102?authe" Then do the same for the Headers Tab just insert the `key` and `Value`  then just click send it and should prompt a message saying ` "message": "Record Has Been Deleted Successfully"`
