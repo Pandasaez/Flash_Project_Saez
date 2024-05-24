@@ -1,21 +1,28 @@
+# Import necessary libraries
 from flask import Flask, request, jsonify
 from flask_mysqldb import MySQL
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 
+# Initialize the Flask app
 app = Flask(__name__)
+
+# Secret key for session management
 app.secret_key = "many random bytes"
+
+# Configuration for MySQL database connection
 app.config['MYSQL_HOST'] = "localhost"
 app.config['MYSQL_USER'] = "root"
 app.config['MYSQL_PASSWORD'] = "JasperSaez3489"
 app.config['MYSQL_DB'] = 'information'
 
-# Configure JWT
+# Configuration for JWT
 app.config['JWT_SECRET_KEY'] = 'IT'  
 jwt = JWTManager(app)
 
+# Initialize MySQL
 mysql = MySQL(app)
 
-# Information for Password and Username
+# Dummy user data for authentication
 users = {
     'Jasper': 'Saez'
 }
@@ -27,10 +34,13 @@ def login():
     username = data.get('username')
     password = data.get('password')
 
+    # Check if username and password are correct
     if username in users and users[username] == password:
+        # Create access token
         access_token = create_access_token(identity=username)
         return jsonify(access_token=access_token), 200
     else:
+        # Return error if credentials are invalid
         return jsonify({"error": "Invalid credentials"}), 401
 
 # Protected route that requires JWT token
@@ -38,9 +48,10 @@ def login():
 @jwt_required()
 def protected():
     current_user = get_jwt_identity()
+    # Return the current user's identity
     return jsonify(logged_in_as=current_user), 200
 
-# Create a new student using JSON data (protected route)
+# Route to insert a new student record (protected route)
 @app.route("/insert", methods=['POST'])
 @jwt_required()
 def insert():
@@ -51,29 +62,34 @@ def insert():
         age = data.get('age')
         college = data.get('college')
 
+        # Check if all required fields are provided
         if not id or not name or not age or not college:
             return jsonify({"error": "Missing data"}), 400
 
         cur = mysql.connection.cursor()
+        # Insert new student record into the database
         cur.execute("INSERT INTO student (ID, `Student Name`, `Age`, `College`) VALUES (%s, %s, %s, %s)", (id, name, age, college))
         mysql.connection.commit()
         cur.close()
 
         return jsonify({"message": "Data Inserted Successfully"}), 201
     except Exception as e:
+        # Return error if any exception occurs
         return jsonify({"error": str(e)}), 400
 
-# Read all students (protected route)
+# Route to read all student records (protected route)
 @app.route("/", methods=['GET'])
 @jwt_required()
 def index():
     try:
         cur = mysql.connection.cursor()
+        # Select all student records from the database
         cur.execute("SELECT * FROM student")
         data = cur.fetchall()
         cur.close()
 
         students = []
+        # Convert fetched data into a list of dictionaries
         for row in data:
             student = {
                 "ID": row[0],
@@ -85,9 +101,10 @@ def index():
 
         return jsonify({"students": students}), 200
     except Exception as e:
+        # Return error if any exception occurs
         return jsonify({"error": str(e)}), 500
 
-# Update a student using JSON data (protected route)
+# Route to update an existing student record (protected route)
 @app.route('/update/<int:id_data>', methods=['PUT'])
 @jwt_required()
 def update(id_data):
@@ -98,10 +115,12 @@ def update(id_data):
         age = data.get('age')
         college = data.get('college')
 
+        # Check if all required fields are provided
         if not name or not age or not college:
             return jsonify({"error": "Missing data"}), 400
 
         cur = mysql.connection.cursor()
+        # Update the student record in the database
         cur.execute("""
         UPDATE student SET `ID`=%s, `Student Name`=%s, `Age`=%s, `College`=%s
         WHERE ID=%s
@@ -111,22 +130,25 @@ def update(id_data):
 
         return jsonify({"message": "Data Updated Successfully"}), 200
     except Exception as e:
+        # Return error if any exception occurs
         return jsonify({"error": str(e)}), 400
 
-
-# Delete a student (protected route)
+# Route to delete a student record (protected route)
 @app.route('/delete/<int:id_data>', methods=['DELETE'])
 @jwt_required()
 def delete(id_data):
     try:
         cur = mysql.connection.cursor()
+        # Delete the student record from the database
         cur.execute("DELETE FROM student WHERE ID=%s", (id_data,))
         mysql.connection.commit()
         cur.close()
 
         return jsonify({"message": "Record Has Been Deleted Successfully"}), 200
     except Exception as e:
+        # Return error if any exception occurs
         return jsonify({"error": str(e)}), 400
 
+# Run the Flask app
 if __name__ == "__main__":
     app.run(debug=True)
