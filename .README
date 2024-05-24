@@ -159,3 +159,11 @@ with 200OK
 ## **4. Delete the DATA**
 
 is an easy process create a new tab then select `DELETE` then then input the given link from the program for this example we will use this "http://127.0.0.1:5000" then just input the data like this to delete a user "/delete/1234?authe" just change the number depending of the ID of that student you want to remove/delete... it should look like this completed "http://127.0.0.1:5000/delete/3102?authe" Then do the same for the Headers Tab just insert the `key` and `Value`  then just click send it and should prompt a message saying ` "message": "Record Has Been Deleted Successfully"`
+
+
+
+## **5. Search Function**
+
+In the instruction we are asked to do a search function to search at the data base .so i came up with a name search function so you would type the name of the student you want to pull up so to do this..
+
+Open another tab and set it to `GET` then input the link for the database "http://127.0.0.1:5000" then add this "/search?name=the name you want to search for" so example `http://127.0.0.1:5000/search?name=Jasper` then on the tabs for putting the aethentication which will be the Headers tab go there and apply the same security inputs  `key` and `Value` . then hit send and it should show you the name of the data your trying to pull up 

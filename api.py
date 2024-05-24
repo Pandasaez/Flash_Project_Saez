@@ -149,6 +149,42 @@ def delete(id_data):
         # Return error if any exception occurs
         return jsonify({"error": str(e)}), 400
 
+# Route to search for student records by name (protected route)
+@app.route('/search', methods=['GET'])
+@jwt_required()
+def search_by_name():
+    try:
+        # Get search query (name) from query parameters
+        search_name = request.args.get('name')
+        
+        if not search_name:
+            return jsonify({"error": "Missing search query"}), 400
+
+        cur = mysql.connection.cursor()
+        # Search for student records based on the provided name query
+        cur.execute("""
+        SELECT * FROM student
+        WHERE `Student Name` LIKE %s
+        """, (f"%{search_name}%",))
+        data = cur.fetchall()
+        cur.close()
+
+        students = []
+        # Convert fetched data into a list of dictionaries
+        for row in data:
+            student = {
+                "ID": row[0],
+                "Student Name": row[1],
+                "Age": row[2],
+                "College": row[3]
+            }
+            students.append(student)
+
+        return jsonify({"students": students}), 200
+    except Exception as e:
+        # Return error if any exception occurs
+        return jsonify({"error": str(e)}), 500
+
 # Run the Flask app
 if __name__ == "__main__":
     app.run(debug=True)
