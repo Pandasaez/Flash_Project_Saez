@@ -16,18 +16,23 @@ mysql = MySQL(app)
 def insert():
     try:
         data = request.get_json()
-        name = data['name']
-        age = data['age']
-        college = data['college']
+        id = data.get('ID')
+        name = data.get('name')
+        age = data.get('age')
+        college = data.get('college')
+
+        if not id or not name or not age or not college:
+            return jsonify({"error": "Missing data"}), 400
 
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO student (`Student Name`, `Age`, `College`) VALUES (%s, %s, %s)", (name, age, college))
+        cur.execute("INSERT INTO student (ID, `Student Name`, `Age`, `College`) VALUES (%s, %s, %s, %s)", (id, name, age, college))
         mysql.connection.commit()
         cur.close()
 
         return jsonify({"message": "Data Inserted Successfully"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
 
 # Read all students
 @app.route("/", methods=['GET'])
@@ -48,7 +53,7 @@ def index():
             }
             students.append(student)
 
-        return jsonify({"students": students})
+        return jsonify({"students": students}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -57,9 +62,12 @@ def index():
 def update(id_data):
     try:
         data = request.get_json()
-        name = data['name']
-        age = data['age']
-        college = data['college']
+        name = data.get('name')
+        age = data.get('age')
+        college = data.get('college')
+
+        if not name or not age or not college:
+            return jsonify({"error": "Missing data"}), 400
 
         cur = mysql.connection.cursor()
         cur.execute("""
